@@ -1,24 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Papa from 'papaparse'
+import { useState, useEffect } from "react";
+import Scatter from "./components/Scatter";
+import Bar from "./components/Bar"
+const App: React.FC = () => {
+  // Specify the data for the chart
+  const [rows, setRows] = useState([]);
+ 
+  useEffect(() => {
+    async function getData() {
+      try {
 
-function App() {
+        const response: any = await fetch('/winedata.csv')// Fetching data from csv file
+        const reader: any = response.body.getReader()
+        const result = await reader.read() // raw array
+        const decoder = new TextDecoder('utf-8')
+        const csv = decoder.decode(result.value) // the csv text
+        const results = Papa.parse(csv, { header: true }) // object with { data, errors, meta }
+        const rows: any = results.data // array of objects
+        console.log("Rows type", typeof (rows));
+        setRows(rows)
+
+      }
+      catch (error) {
+        throw error;
+      }
+
+
+
+    }
+    getData()
+  }, [])
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Scatter rows={rows} />
+      <Bar rows={rows} />
     </div>
   );
 }
