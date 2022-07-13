@@ -5,7 +5,7 @@ import Bar from "./components/Bar"
 const App: React.FC = () => {
   // Specify the data for the chart
   const [rows, setRows] = useState([]);
- 
+
   useEffect(() => {
     async function getData() {
       try {
@@ -17,16 +17,12 @@ const App: React.FC = () => {
         const csv = decoder.decode(result.value) // the csv text
         const results = Papa.parse(csv, { header: true }) // object with { data, errors, meta }
         const rows: any = results.data // array of objects
-        console.log("Rows type", typeof (rows));
         setRows(rows)
 
       }
       catch (error) {
         throw error;
       }
-
-
-
     }
     getData()
   }, [])

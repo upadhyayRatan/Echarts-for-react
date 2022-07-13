@@ -5,12 +5,6 @@ type Props = {
     rows: never[];
 }
 function Bar(props: Props) {
-    //Declaring array to store data for each class
-    const arrClass1: number[][] = [];
-    const arrClass2: number[][] = [];
-    const arrClass3: number[][] = [];
-
-
     //declare type for wine attributes
     type wineAttribute = {
         id: string,
@@ -29,20 +23,33 @@ function Bar(props: Props) {
         TotalPhenols: string
     }
 
+    let sumMalicAcid1:number=0;
+    let countMalicAcid1:number=0;
+    let sumMalicAcid2:number=0;
+    let countMalicAcid2:number=0;
+    let sumMalicAcid3:number=0;
+    let countMalicAcid3:number=0;
     //Assigning value to arrays
     props.rows.forEach((data: wineAttribute) => {
-        let alcohol: number = parseFloat(data.Alcohol);
         let malicAcid: number = parseFloat(data.MalicAcid);
         if (data.id === '1') {
-            arrClass1.push([alcohol, malicAcid]);
+           sumMalicAcid1=sumMalicAcid1+malicAcid;
+           ++countMalicAcid1;
         }
         if (data.id === '2') {
-            arrClass2.push([alcohol, malicAcid]);
+            sumMalicAcid2=sumMalicAcid2+malicAcid;
+            ++countMalicAcid2;
+
         }
         if (data.id === '3') {
-            arrClass3.push([alcohol, malicAcid]);
+            sumMalicAcid3=sumMalicAcid3+malicAcid;  
+            ++countMalicAcid3;
         }
     })
+  
+    let malicAcidAvg1=sumMalicAcid1/countMalicAcid1;
+    let malicAcidAvg2=sumMalicAcid2/countMalicAcid2;
+    let malicAcidAvg3=sumMalicAcid3/countMalicAcid3;
 
     //option for echart
     const option = {
@@ -79,6 +86,7 @@ function Bar(props: Props) {
                 show: false
             },
             scale: true,
+            data: ['class 1', 'class2', 'class 3']
         },
 
         yAxis: {
@@ -88,29 +96,28 @@ function Bar(props: Props) {
             },
             scale: true,
         },
-        series: [
-            {
-                name: "Class 1",
-                type: "bar",
-                data: arrClass1,
-                color: "red"
+        series: {
+            type: 'bar',
+            data: [
+                {
+                    value: malicAcidAvg1,
+                    groupId: 'class1',
+                    color:'blue'
+                },
+                {
+                    value: malicAcidAvg2,
+                    groupId: 'class2',
+                    color:'green'
+                },
+                {
+                    value: malicAcidAvg3,
+                    groupId: 'class3',
+                    color:'red'
+                }
+            ]
 
-            },
-            {
-                name: "Class 2",
-                type: "bar",
-                data: arrClass2,
-                color: "green"
 
-            },
-            {
-                name: "Class 3",
-                type: "bar",
-                data: arrClass3,
-                color: "blue"
-
-            }
-        ],
+        },
 
 
 
